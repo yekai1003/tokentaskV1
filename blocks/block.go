@@ -65,7 +65,7 @@ func Eth_Login(userid, passwd string) (bool, error) {
 	return instance.Login(&opts, userid, passwd)
 }
 
-//实现eth的注册调用
+//实现eth的挖矿调用
 func Eth_Mint(userid string, amount int64) error {
 	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
 	if err != nil {
@@ -80,6 +80,25 @@ func Eth_Mint(userid string, amount int64) error {
 	_, err = instance.Mint(auth, userid, big.NewInt(amount))
 	if err != nil {
 		log.Panic("Failed to Mint", err)
+	}
+	return err
+}
+
+//实现eth的任务发布调用
+func Eth_Issue(who, pass, desc string, amount int64) error {
+	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
+	if err != nil {
+		log.Panic("Failed to NewTask", err)
+	}
+	//Register(opts *bind.TransactOpts, userid string, username string, passwd string) (*types.Transaction, error)
+	auth, err := bind.NewTransactor(strings.NewReader(keyJson), "123")
+	if err != nil {
+		log.Panic("failed to NewTransactor", err)
+	}
+	//Issue(opts *bind.TransactOpts, issuer string, pass string, desc string, bonus *big.Int)
+	_, err = instance.Issue(auth, who, pass, desc, big.NewInt(amount))
+	if err != nil {
+		log.Panic("Failed to Issue", err)
 	}
 	return err
 }

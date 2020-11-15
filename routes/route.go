@@ -7,6 +7,7 @@ import (
 	"tokentaskV1/blocks"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-session/gin-session"
 )
 
 type User struct {
@@ -17,6 +18,16 @@ type User struct {
 type MintInfo struct {
 	UserName string `json:"username"`
 	Value    int64  `json:"value"`
+}
+
+type TaskInfo struct {
+	Task_ID string  `json:"task_id"`
+	Issuer  string  `json:"issuer"`
+	Worker  string  `json:"task_user"`
+	Bonus   uint256 `json:"bonus"`
+	Desc    string  `json:"desc"`
+	Comment string  `json:"comment"`
+	Status  uint8   `json:"status"`
 }
 
 type RespData struct {
@@ -111,6 +122,18 @@ func Login(c *gin.Context) {
 		resp.Code = TASK_LOGINERR
 		return
 	}
+
+	//session处理
+	store := ginsession.FromContext(c)
+	store.Set("username", uu.UserName)
+	store.Set("passwd", uu.PassWord)
+	err := store.Save()
+	if err != nil {
+		c.AbortWithError(500, err)
+		resp.Code = TASK_UNKNOWNERR
+		return
+	}
+
 }
 
 func Mint(c *gin.Context) {
@@ -132,6 +155,44 @@ func Mint(c *gin.Context) {
 	err = blocks.Eth_Mint(mi.UserName, mi.Value)
 	if err != nil {
 		fmt.Println("Failed to Eth_Mint", err)
+		resp.Code = TASK_ETHERR
+		return
+	}
+}
+
+func Issue(c *gin.Context) {
+	//组织响应消息
+	resp := RespData{
+		Code: TASK_OK,
+	}
+	defer ResponseData(c, &resp)
+	//解析数据
+	var task TaskInfo
+	err := c.Bind(&task)
+	if err != nil {
+		fmt.Println("Failed to Bind", err)
+		resp.Code = TASK_PARAMERR
+		return
+	}
+	fmt.Println(task)
+
+	//从session中获取对应信息
+	store := ginsession.FromContext(c)
+	username, ok := store.Get("username")
+	if !ok {
+		c.AbortWithStatus(404)
+		return
+	}
+	passwd, ok := store.Get("passwd")
+	if !ok {
+		ctx.AbortWithStatus(404)
+		return
+	}
+
+	//操作数据库（区块链智能合约）
+	err = blocks.Eth_Issue(username, passwd, task.Desc, task.Bonus)
+	if err != nil {
+		fmt.Println("Failed to Eth_Issue", err)
 		resp.Code = TASK_ETHERR
 		return
 	}
