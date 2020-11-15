@@ -21,13 +21,13 @@ type MintInfo struct {
 }
 
 type TaskInfo struct {
-	Task_ID string  `json:"task_id"`
-	Issuer  string  `json:"issuer"`
-	Worker  string  `json:"task_user"`
-	Bonus   uint256 `json:"bonus"`
-	Desc    string  `json:"desc"`
-	Comment string  `json:"comment"`
-	Status  uint8   `json:"status"`
+	Task_ID string `json:"task_id"`
+	Issuer  string `json:"issuer"`
+	Worker  string `json:"task_user"`
+	Bonus   int64  `json:"bonus"`
+	Desc    string `json:"desc"`
+	Comment string `json:"comment"`
+	Status  uint8  `json:"status"`
 }
 
 type RespData struct {
@@ -127,7 +127,7 @@ func Login(c *gin.Context) {
 	store := ginsession.FromContext(c)
 	store.Set("username", uu.UserName)
 	store.Set("passwd", uu.PassWord)
-	err := store.Save()
+	err = store.Save()
 	if err != nil {
 		c.AbortWithError(500, err)
 		resp.Code = TASK_UNKNOWNERR
@@ -185,12 +185,12 @@ func Issue(c *gin.Context) {
 	}
 	passwd, ok := store.Get("passwd")
 	if !ok {
-		ctx.AbortWithStatus(404)
+		c.AbortWithStatus(404)
 		return
 	}
 
 	//操作数据库（区块链智能合约）
-	err = blocks.Eth_Issue(username, passwd, task.Desc, task.Bonus)
+	err = blocks.Eth_Issue(username.(string), passwd.(string), task.Desc, task.Bonus)
 	if err != nil {
 		fmt.Println("Failed to Eth_Issue", err)
 		resp.Code = TASK_ETHERR
