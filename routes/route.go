@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"tokentaskV1/blocks"
 
@@ -191,6 +192,47 @@ func Issue(c *gin.Context) {
 
 	//操作数据库（区块链智能合约）
 	err = blocks.Eth_Issue(username.(string), passwd.(string), task.Desc, task.Bonus)
+	if err != nil {
+		fmt.Println("Failed to Eth_Issue", err)
+		resp.Code = TASK_ETHERR
+		return
+	}
+}
+
+//任务修改接口
+func Update(c *gin.Context) {
+	//组织响应消息
+	resp := RespData{
+		Code: TASK_OK,
+	}
+	defer ResponseData(c, &resp)
+	//解析数据
+	var task TaskInfo
+	err := c.Bind(&task)
+	if err != nil {
+		fmt.Println("Failed to Bind", err)
+		resp.Code = TASK_PARAMERR
+		return
+	}
+	fmt.Println(task)
+
+	//从session中获取对应信息
+	store := ginsession.FromContext(c)
+	username, ok := store.Get("username")
+	if !ok {
+		c.AbortWithStatus(404)
+		return
+	}
+	passwd, ok := store.Get("passwd")
+	if !ok {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	//操作数据库（区块链智能合约）
+	//Eth_Update(who, pass, comment string, taskID int64, status uint8)
+	taskid, _ := strconv.Atoi(task.Task_ID)
+	err = blocks.Eth_Update(username.(string), passwd.(string), task.Comment, int64(taskid), task.Status)
 	if err != nil {
 		fmt.Println("Failed to Eth_Issue", err)
 		resp.Code = TASK_ETHERR

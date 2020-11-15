@@ -102,3 +102,39 @@ func Eth_Issue(who, pass, desc string, amount int64) error {
 	}
 	return err
 }
+
+//实现eth的任务修改调用
+func Eth_Update(who, pass, comment string, taskID int64, status uint8) error {
+	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
+	if err != nil {
+		log.Panic("Failed to NewTask", err)
+	}
+	//Register(opts *bind.TransactOpts, userid string, username string, passwd string) (*types.Transaction, error)
+	auth, err := bind.NewTransactor(strings.NewReader(keyJson), "123")
+	if err != nil {
+		log.Panic("failed to NewTransactor", err)
+	}
+	//Take(opts *bind.TransactOpts, who string, pass string, taskID *big.Int)
+	//Commit(opts *bind.TransactOpts, who string, pass string, taskID *big.Int)
+
+	//Confirm(opts *bind.TransactOpts, issuer string, pass string, taskID *big.Int, comment string, st uint8)
+	if status == 1 {
+		_, err = instance.Take(auth, who, pass, big.NewInt(taskID))
+		if err != nil {
+			log.Panic("Failed to Take", err)
+		}
+	} else if status == 2 {
+		_, err = instance.Commit(auth, who, pass, big.NewInt(taskID))
+		if err != nil {
+			log.Panic("Failed to Commit", err)
+		}
+	} else if status == 3 || status == 4 {
+		status = 1 //打回处理
+		_, err = instance.Confirm(auth, who, pass, big.NewInt(taskID), comment, status)
+		if err != nil {
+			log.Panic("Failed to Confirm", err)
+		}
+	}
+
+	return err
+}
