@@ -132,8 +132,9 @@ func Eth_Update(who, pass, comment string, taskID int64, status uint8) error {
 			log.Panic("Failed to Commit", err)
 		}
 	} else if status == 3 || status == 4 {
-		status = 1 //打回处理
-		fmt.Println("call confirm")
+		if status == 4 {
+			status = 1 //打回处理
+		}
 		_, err = instance.Confirm(auth, who, pass, big.NewInt(taskID), comment, status)
 		if err != nil {
 			log.Panic("Failed to Confirm", err)

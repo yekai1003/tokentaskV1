@@ -28,7 +28,7 @@ type TaskInfo struct {
 	Bonus   int64  `json:"bonus"`
 	Desc    string `json:"desc"`
 	Comment string `json:"comment"`
-	Status  uint8  `json:"task_status"`
+	Status  uint8  `json:"status"`
 }
 
 type RespData struct {
@@ -214,7 +214,7 @@ func Modify(c *gin.Context) {
 		resp.Code = TASK_PARAMERR
 		return
 	}
-	fmt.Println(task)
+	fmt.Println("Modify:", task)
 
 	//从session中获取对应信息
 	store := ginsession.FromContext(c)
