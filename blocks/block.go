@@ -1,6 +1,7 @@
 package blocks
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -105,6 +106,8 @@ func Eth_Issue(who, pass, desc string, amount int64) error {
 
 //实现eth的任务修改调用
 func Eth_Update(who, pass, comment string, taskID int64, status uint8) error {
+
+	fmt.Println("who=", who, "pass=", pass, "taskid=", taskID, "status=", status)
 	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
 	if err != nil {
 		log.Panic("Failed to NewTask", err)
@@ -130,6 +133,7 @@ func Eth_Update(who, pass, comment string, taskID int64, status uint8) error {
 		}
 	} else if status == 3 || status == 4 {
 		status = 1 //打回处理
+		fmt.Println("call confirm")
 		_, err = instance.Confirm(auth, who, pass, big.NewInt(taskID), comment, status)
 		if err != nil {
 			log.Panic("Failed to Confirm", err)
