@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"math"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
