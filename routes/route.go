@@ -28,7 +28,7 @@ type TaskInfo struct {
 	Bonus   int64  `json:"bonus"`
 	Desc    string `json:"desc"`
 	Comment string `json:"comment"`
-	Status  uint8  `json:"status"`
+	Status  uint8  `json:"task_status"`
 }
 
 type RespData struct {
@@ -234,7 +234,7 @@ func Update(c *gin.Context) {
 	taskid, _ := strconv.Atoi(task.Task_ID)
 	err = blocks.Eth_Update(username.(string), passwd.(string), task.Comment, int64(taskid), task.Status)
 	if err != nil {
-		fmt.Println("Failed to Eth_Issue", err)
+		fmt.Println("Failed to Eth_Update", err)
 		resp.Code = TASK_ETHERR
 		return
 	}
