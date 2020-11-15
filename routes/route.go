@@ -14,6 +14,11 @@ type User struct {
 	PassWord string `json:"password"`
 }
 
+type MintInfo struct {
+	UserName string `json:"username"`
+	Value    int64  `json:"value"`
+}
+
 type RespData struct {
 	Code string      `json:"code"`
 	Msg  string      `json:"msg"`
@@ -104,6 +109,30 @@ func Login(c *gin.Context) {
 	if !ok {
 		fmt.Println("Failed to Login, password or user err")
 		resp.Code = TASK_LOGINERR
+		return
+	}
+}
+
+func Mint(c *gin.Context) {
+	//组织响应消息
+	resp := RespData{
+		Code: TASK_OK,
+	}
+	defer ResponseData(c, &resp)
+	//解析数据
+	var mi MintInfo
+	err := c.Bind(&mi)
+	if err != nil {
+		fmt.Println("Failed to Bind", err)
+		resp.Code = TASK_PARAMERR
+		return
+	}
+	fmt.Println(mi)
+	//操作数据库（区块链智能合约）
+	err = blocks.Eth_Mint(mi.UserName, mi.Value)
+	if err != nil {
+		fmt.Println("Failed to Eth_Mint", err)
+		resp.Code = TASK_ETHERR
 		return
 	}
 }

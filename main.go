@@ -18,6 +18,7 @@ func main() {
 	//增加注册接口
 	r.POST("/register", routes.Register)
 	r.POST("/login", routes.Login)
+	r.POST("/mint", routes.Mint)
 
 	r.Run(":9090") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
