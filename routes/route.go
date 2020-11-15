@@ -200,7 +200,7 @@ func Issue(c *gin.Context) {
 }
 
 //任务修改接口
-func Update(c *gin.Context) {
+func Modify(c *gin.Context) {
 	//组织响应消息
 	resp := RespData{
 		Code: TASK_OK,
