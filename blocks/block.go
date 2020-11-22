@@ -18,7 +18,7 @@ type TaskInfoData struct {
 	Issuer  string `json:"issuer"`
 	Worker  string `json:"task_user"`
 	Bonus   int64  `json:"bonus"`
-	Desc    string `json:"desc"`
+	Desc    string `json:"task_name"`
 	Comment string `json:"comment"`
 	Status  uint8  `json:"status"`
 }
