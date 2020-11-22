@@ -248,19 +248,19 @@ func TaskList(c *gin.Context) {
 		resp.Code = utils.TASK_ETHERR
 		return
 	}
-	
-	begin := (ipage - 1) *10
-	end := ipage * 10 
-	if end >len(tasks)  {
+
+	begin := (ipage - 1) * 10
+	end := ipage * 10
+	if end > len(tasks) {
 		end = len(tasks)
 	}
-	
-	ts := {
-		Total int `json:"total"`
-		Data interface{} `json:"data"`
+
+	ts := struct {
+		Total int         `json:"total"`
+		Data  interface{} `json:"data"`
 	}{
-		Total:len(tasks),
-		Data:tasks[begin:end],
+		Total: len(tasks),
+		Data:  tasks[begin:end],
 	}
 	resp.Data = ts
 }
