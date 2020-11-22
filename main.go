@@ -31,5 +31,5 @@ func main() {
 	//任务修改接口
 	r.POST("/update", routes.Modify)
 
-	r.Run(":9090") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
