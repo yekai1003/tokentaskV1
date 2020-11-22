@@ -21,16 +21,6 @@ type MintInfo struct {
 	Value    int64  `json:"value"`
 }
 
-type TaskInfo struct {
-	Task_ID string `json:"task_id"`
-	Issuer  string `json:"issuer"`
-	Worker  string `json:"task_user"`
-	Bonus   int64  `json:"bonus"`
-	Desc    string `json:"desc"`
-	Comment string `json:"comment"`
-	Status  uint8  `json:"status"`
-}
-
 type RespData struct {
 	Code string      `json:"code"`
 	Msg  string      `json:"msg"`
@@ -168,7 +158,7 @@ func Issue(c *gin.Context) {
 	}
 	defer ResponseData(c, &resp)
 	//解析数据
-	var task TaskInfo
+	var task blocks.TaskInfoData
 	err := c.Bind(&task)
 	if err != nil {
 		fmt.Println("Failed to Bind", err)
@@ -207,7 +197,7 @@ func Modify(c *gin.Context) {
 	}
 	defer ResponseData(c, &resp)
 	//解析数据
-	var task TaskInfo
+	var task blocks.TaskInfoData
 	err := c.Bind(&task)
 	if err != nil {
 		fmt.Println("Failed to Bind", err)
@@ -238,4 +228,39 @@ func Modify(c *gin.Context) {
 		resp.Code = TASK_ETHERR
 		return
 	}
+}
+
+//任务列表查询
+//GET http://10.211.55.3:9090/tasklist?page=1
+func TaskList(c *gin.Context) {
+	//组织响应消息
+	resp := RespData{
+		Code: TASK_OK,
+	}
+	defer ResponseData(c, &resp)
+	//解析数据
+	page := c.Query("page")
+	ipage, _ := strconv.Atoi(page)
+
+	//查询当前所有任务
+	tasks, err := blocks.QueryTask()
+	if err != nil {
+		resp.Code = utils.TASK_ETHERR
+		return
+	}
+	
+	begin := (ipage - 1) *10
+	end := ipage * 10 
+	if end >len(tasks)  {
+		end = len(tasks)
+	}
+	
+	ts := {
+		Total int `json:"total"`
+		Data interface{} `json:"data"`
+	}{
+		Total:len(tasks),
+		Data:tasks[begin:end],
+	}
+	resp.Data = ts
 }

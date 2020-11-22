@@ -12,6 +12,16 @@ import (
 	"strings"
 )
 
+type TaskInfoData struct {
+	Task_ID string `json:"task_id"`
+	Issuer  string `json:"issuer"`
+	Worker  string `json:"task_user"`
+	Bonus   int64  `json:"bonus"`
+	Desc    string `json:"desc"`
+	Comment string `json:"comment"`
+	Status  uint8  `json:"status"`
+}
+
 var keyJson = `{"address":"1997f640f547af13b6acebaa7d176d14746e0c47","crypto":{"cipher":"aes-128-ctr","ciphertext":"753465dba334025383082cfe19e6b454ef03f5a412e4bf818444fda9ff99d3a1","cipherparams":{"iv":"ef419164186fc62367d797da8429884b"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"83d4ff2bd2589d371cb2d89993502f607ffe9b00451ac0854bf32dc83d054718"},"mac":"f548202fa3be51cda79c7dc1daf07995a89a150ad6aaf0c05b79c92176c216e1"},"id":"e46cac91-f6e3-4b3e-8499-06a4d1b63207","version":3}`
 
 const (
@@ -142,4 +152,31 @@ func Eth_Update(who, pass, comment string, taskID int64, status uint8) error {
 	}
 
 	return err
+}
+
+func QueryTask() ([]TaskInfoData, error) {
+	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
+	if err != nil {
+		log.Panic("Failed to NewTask", err)
+	}
+	tasks, err := instance.TaskQueryAll(nil)
+	if err != nil {
+		log.Panic("Failed to TaskQueryAll", err)
+	}
+	var taskinfodatas []TaskInfoData
+	var taskinfo TaskInfoData
+	num := 0
+	for _, v := range tasks {
+		taskinfo.Task_ID = num
+		taskinfo.Bonus = v.Bonus.Int64()
+		taskinfo.Comment = v.Comment
+		taskinfo.Desc = v.Desc
+		taskinfo.Issuer = v.Issuer
+		taskinfo.Worker = v.Worker
+		taskinfo.Status = v.Status
+		taskinfodatas = append(taskinfodatas, taskinfo)
+		num++
+	}
+
+	return taskinfodatas, err
 }

@@ -30,6 +30,8 @@ func main() {
 	r.POST("/issue", routes.Issue)
 	//任务修改接口
 	r.POST("/update", routes.Modify)
+	//任务列表请求
+	r.GET("tasklist", routes.TaskList)
 
 	r.Run(":9090") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
