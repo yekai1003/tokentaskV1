@@ -245,7 +245,7 @@ func TaskList(c *gin.Context) {
 	//查询当前所有任务
 	tasks, err := blocks.QueryTask()
 	if err != nil {
-		resp.Code = utils.TASK_ETHERR
+		resp.Code = TASK_ETHERR
 		return
 	}
 
