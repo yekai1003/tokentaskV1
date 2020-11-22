@@ -10,8 +10,11 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.Use(ginsession.New()) //使用session中间件
-	//r.StaticFile("/", "disc/index.html") //指定静态页面
+	r.Use(ginsession.New())                   //使用session中间件
+	r.StaticFile("/", "dist/index.html")      //指定静态页面
+	r.StaticFile("/index", "dist/index.html") //指定静态页面
+	r.Static("static", "dist/static")
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
