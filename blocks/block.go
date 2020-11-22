@@ -20,7 +20,7 @@ type TaskInfoData struct {
 	Bonus   int64  `json:"bonus"`
 	Desc    string `json:"task_name"`
 	Comment string `json:"comment"`
-	Status  uint8  `json:"status"`
+	Status  uint8  `json:"task_status"`
 }
 
 var keyJson = `{"address":"1997f640f547af13b6acebaa7d176d14746e0c47","crypto":{"cipher":"aes-128-ctr","ciphertext":"753465dba334025383082cfe19e6b454ef03f5a412e4bf818444fda9ff99d3a1","cipherparams":{"iv":"ef419164186fc62367d797da8429884b"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"83d4ff2bd2589d371cb2d89993502f607ffe9b00451ac0854bf32dc83d054718"},"mac":"f548202fa3be51cda79c7dc1daf07995a89a150ad6aaf0c05b79c92176c216e1"},"id":"e46cac91-f6e3-4b3e-8499-06a4d1b63207","version":3}`
