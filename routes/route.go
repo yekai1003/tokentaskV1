@@ -165,7 +165,7 @@ func Issue(c *gin.Context) {
 		resp.Code = TASK_PARAMERR
 		return
 	}
-	fmt.Println(task)
+	fmt.Printf("Issue[%+v]\n", task)
 
 	//从session中获取对应信息
 	store := ginsession.FromContext(c)
@@ -179,6 +179,7 @@ func Issue(c *gin.Context) {
 		c.AbortWithStatus(404)
 		return
 	}
+	fmt.Println("begin call Eth_Issue")
 
 	//操作数据库（区块链智能合约）
 	err = blocks.Eth_Issue(username.(string), passwd.(string), task.Desc, task.Bonus)
