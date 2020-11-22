@@ -167,6 +167,7 @@ func QueryTask() ([]TaskInfoData, error) {
 	var taskinfodatas []TaskInfoData
 	var taskinfo TaskInfoData
 	var num int64 = 0
+	fmt.Printf("task count[%d]\n", len(tasks))
 	for _, v := range tasks {
 		taskinfo.Task_ID = strconv.FormatInt(num, 10)
 		taskinfo.Bonus = v.Bonus.Int64()
