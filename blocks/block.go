@@ -3,6 +3,7 @@ package blocks
 import (
 	"fmt"
 	"math/big"
+	"strconv"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -165,9 +166,9 @@ func QueryTask() ([]TaskInfoData, error) {
 	}
 	var taskinfodatas []TaskInfoData
 	var taskinfo TaskInfoData
-	num := 0
+	var num int64 = 0
 	for _, v := range tasks {
-		taskinfo.Task_ID = num
+		taskinfo.Task_ID = strconv.FormatInt(num, 10)
 		taskinfo.Bonus = v.Bonus.Int64()
 		taskinfo.Comment = v.Comment
 		taskinfo.Desc = v.Desc
