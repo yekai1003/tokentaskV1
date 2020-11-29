@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"tokentaskV1/blocks"
+	"tokentaskV1/bcos"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-session/gin-session"
@@ -74,7 +74,7 @@ func Register(c *gin.Context) {
 	}
 	fmt.Println(uu)
 	//操作数据库（区块链智能合约）
-	err = blocks.Eth_Register(uu.UserName, uu.PassWord)
+	err = bcos.Bcos_Register(uu.UserName, uu.PassWord)
 	if err != nil {
 		fmt.Println("Failed to Eth_Register", err)
 		resp.Code = TASK_ETHERR
@@ -102,7 +102,7 @@ func Login(c *gin.Context) {
 	// if uu.UserName == "yekai" && uu.PassWord == "123" {
 	// 	resp.Code = TASK_OK
 	// }
-	ok, err := blocks.Eth_Login(uu.UserName, uu.PassWord)
+	ok, err := bcos.Bcos_Login(uu.UserName, uu.PassWord)
 	if err != nil {
 		fmt.Println("Failed to Eth_Login", err)
 		resp.Code = TASK_ETHERR
@@ -143,7 +143,7 @@ func Mint(c *gin.Context) {
 	}
 	fmt.Println(mi)
 	//操作数据库（区块链智能合约）
-	err = blocks.Eth_Mint(mi.UserName, mi.Value)
+	err = bcos.Bcos_Mint(mi.UserName, mi.Value)
 	if err != nil {
 		fmt.Println("Failed to Eth_Mint", err)
 		resp.Code = TASK_ETHERR
@@ -158,7 +158,7 @@ func Issue(c *gin.Context) {
 	}
 	defer ResponseData(c, &resp)
 	//解析数据
-	var task blocks.TaskInfoData
+	var task bcos.TaskInfoData
 	err := c.Bind(&task)
 	if err != nil {
 		fmt.Println("Failed to Bind", err)
@@ -182,7 +182,7 @@ func Issue(c *gin.Context) {
 	fmt.Println("begin call Eth_Issue")
 
 	//操作数据库（区块链智能合约）
-	err = blocks.Eth_Issue(username.(string), passwd.(string), task.Desc, task.Bonus)
+	err = bcos.Bcos_Issue(username.(string), passwd.(string), task.Desc, task.Bonus)
 	if err != nil {
 		fmt.Println("Failed to Eth_Issue", err)
 		resp.Code = TASK_ETHERR
@@ -198,7 +198,7 @@ func Modify(c *gin.Context) {
 	}
 	defer ResponseData(c, &resp)
 	//解析数据
-	var task blocks.TaskInfoData
+	var task bcos.TaskInfoData
 	err := c.Bind(&task)
 	if err != nil {
 		fmt.Println("Failed to Bind", err)
@@ -223,7 +223,7 @@ func Modify(c *gin.Context) {
 	//操作数据库（区块链智能合约）
 	//Eth_Update(who, pass, comment string, taskID int64, status uint8)
 	taskid, _ := strconv.Atoi(task.Task_ID)
-	err = blocks.Eth_Update(username.(string), passwd.(string), task.Comment, int64(taskid), task.Status)
+	err = bcos.Bcos_Update(username.(string), passwd.(string), task.Comment, int64(taskid), task.Status)
 	if err != nil {
 		fmt.Println("Failed to Eth_Update", err)
 		resp.Code = TASK_ETHERR
@@ -244,7 +244,7 @@ func TaskList(c *gin.Context) {
 	ipage, _ := strconv.Atoi(page)
 
 	//查询当前所有任务
-	tasks, err := blocks.QueryTask()
+	tasks, err := bcos.QueryTask()
 	if err != nil {
 		resp.Code = TASK_ETHERR
 		return
