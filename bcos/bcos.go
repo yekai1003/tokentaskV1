@@ -137,13 +137,34 @@ func QueryTask() ([]TaskInfoData, error) {
 		log.Panic("Failed to NewTask", err)
 	}
 	issuers_, err := instance.TaskQryAllIssuer(nil)
+	if err != nil {
+		fmt.Println("failed to query TaskQryAllIssuer", err)
+		return nil, err
+	}
+
 	workers_, err := instance.TaskQryAllWorker(nil)
+	if err != nil {
+		fmt.Println("failed to query TaskQryAllWorker", err)
+		return nil, err
+	}
 	desc_, err := instance.TaskQryAllDesc(nil)
+	if err != nil {
+		fmt.Println("failed to query TaskQryAllDesc", err)
+		return nil, err
+	}
 	comment_, err := instance.TaskQryAllComment(nil)
+	if err != nil {
+		fmt.Println("failed to query TaskQryAllComment", err)
+		return nil, err
+	}
 	bonus_, err := instance.TaskQryAllBonus(nil)
+	if err != nil {
+		fmt.Println("failed to query TaskQryAllComment", err)
+		return nil, err
+	}
 	status_, err := instance.TaskQryAllStatus(nil)
 	if err != nil {
-		fmt.Println("failed to query all tasks", err)
+		fmt.Println("failed to query all TaskQryAllStatus", err)
 		return nil, err
 	}
 
