@@ -132,37 +132,39 @@ func Bcos_Update(who, pass, comment string, taskID int64, status uint8) error {
 }
 
 func QueryTask() ([]TaskInfoData, error) {
+
+	fmt.Println(contract_addr)
 	instance, err := NewTask(common.HexToAddress(contract_addr), cli)
 	if err != nil {
 		log.Panic("Failed to NewTask", err)
 	}
-	issuers_, err := instance.TaskQryAllIssuer(nil)
+	issuers_, err := instance.TaskQryAllIssuer(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query TaskQryAllIssuer", err)
 		return nil, err
 	}
 
-	workers_, err := instance.TaskQryAllWorker(nil)
+	workers_, err := instance.TaskQryAllWorker(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query TaskQryAllWorker", err)
 		return nil, err
 	}
-	desc_, err := instance.TaskQryAllDesc(nil)
+	desc_, err := instance.TaskQryAllDesc(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query TaskQryAllDesc", err)
 		return nil, err
 	}
-	comment_, err := instance.TaskQryAllComment(nil)
+	comment_, err := instance.TaskQryAllComment(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query TaskQryAllComment", err)
 		return nil, err
 	}
-	bonus_, err := instance.TaskQryAllBonus(nil)
+	bonus_, err := instance.TaskQryAllBonus(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query TaskQryAllComment", err)
 		return nil, err
 	}
-	status_, err := instance.TaskQryAllStatus(nil)
+	status_, err := instance.TaskQryAllStatus(cli.GetCallOpts())
 	if err != nil {
 		fmt.Println("failed to query all TaskQryAllStatus", err)
 		return nil, err
