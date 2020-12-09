@@ -23,7 +23,7 @@ type TaskInfoData struct {
 }
 
 const (
-	contract_addr = "0xaadc7083f16c568d69f31bdd19d8e37511a5eafe"
+	contract_addr = "0x32e01665e29c86b186b0808b59beb420b2d850eb"
 )
 
 var cli *client.Client
